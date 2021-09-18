@@ -13,6 +13,7 @@ Run:
 Options:
 
 --config // path to config file
---control-url
+--url // site url
 --out-name // name to prefix the files
 --runs // number of test runs to calculate the avarage reports
+--verbose // give the results for all runs + the avarage
