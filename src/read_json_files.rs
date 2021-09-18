@@ -46,8 +46,7 @@ impl JsonFiles {
     // assert!(re.is_match("2014-01-01"));
 
     let mut json_files: Vec<String> = vec![];
-    let path =
-      Path::new("/Users/teoliver/Documents/Code/Side_Projects/rust-lighthouse-utils/reports");
+    let path = Path::new("./reports");
 
     for entry in path.read_dir().expect("read_dir call failed") {
       match entry {
