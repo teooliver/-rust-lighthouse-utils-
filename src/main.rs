@@ -14,12 +14,8 @@ use run_lighthouse_test::{run_lighthouse_test, Config};
 
 use structopt::StructOpt;
 
-/// Search for a pattern in a file and display the lines that contain it.
 #[derive(StructOpt, Debug)]
 pub struct Cli {
-    /// The pattern to look for
-    // pattern: String,
-    /// The path to the file to read
     #[structopt(short = "c", long = "config", parse(from_os_str))]
     config: Option<std::path::PathBuf>,
     #[structopt(short, long = "test-url", parse(from_os_str))]
