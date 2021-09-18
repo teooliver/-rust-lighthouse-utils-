@@ -15,45 +15,40 @@ use run_lighthouse_test::{run_lighthouse_test, Config};
 use structopt::StructOpt;
 
 /// Search for a pattern in a file and display the lines that contain it.
-#[derive(StructOpt)]
+#[derive(StructOpt, Debug)]
 pub struct Cli {
     /// The pattern to look for
-    pattern: String,
+    // pattern: String,
     /// The path to the file to read
-    #[structopt(parse(from_os_str))]
-    path: std::path::PathBuf,
-    #[structopt(parse(from_os_str))]
-    config: std::path::PathBuf,
-    #[structopt(parse(from_os_str))]
-    test_url: std::path::PathBuf,
+    #[structopt(short = "c", long = "config", parse(from_os_str))]
+    config: Option<std::path::PathBuf>,
+    #[structopt(short, long = "test-url", parse(from_os_str))]
+    url: std::path::PathBuf,
+    #[structopt(short = "r", long = "runs", default_value = "10")]
     runs: i32,
+    #[structopt(short = "o", long = "out", default_value = "hello_there_report")]
     out_file_name: String,
 }
 
 fn main() {
-    println!("REMOVING REPORTS DIR");
-    remove_reports_dir().expect("Something went wrong");
-    println!("CREATING REPORTS DIR");
-    create_reports_dir().expect("Something went wrong");
+    // println!("REMOVING REPORTS DIR");
+    remove_reports_dir().expect("Couldn't remove dir");
+    // println!("CREATING REPORTS DIR");
+    create_reports_dir().expect("Couldn't create dir");
+    let args = Cli::from_args();
 
-    // let pattern = std::env::args().nth(1).expect("no pattern given");
-    // let path = std::env::args().nth(2).expect("no path given");
+    println!("{:?}", args)
 
-    // let args = Cli {
-    //     pattern: pattern,
-    //     path: std::path::PathBuf::from(path),
-    // };
+    // println!("Running tests...");
 
-    println!("Running tests...");
+    // let config: Config = serde_json::from_str(&get_data()).unwrap();
 
-    let config: Config = serde_json::from_str(&get_data()).unwrap();
+    // run_lighthouse_test(config);
 
-    run_lighthouse_test(config);
-
-    println!("Cool, All done.");
-    println!("READING FILES");
-    let json_files = JsonFiles::get_json_files();
-    JsonFiles::get_metrics_from_file(json_files[0].to_string()).unwrap();
-    let avarage = JsonFiles::get_avarage_perfomance(json_files);
-    println!("{:?} ======>>>>>", avarage);
+    // println!("Cool, All done.");
+    // println!("READING FILES");
+    // let json_files = JsonFiles::get_json_files();
+    // JsonFiles::get_metrics_from_file(json_files[0].to_string()).unwrap();
+    // let avarage = JsonFiles::get_avarage_perfomance(json_files);
+    // println!("{:?} ======>>>>>", avarage);
 }
