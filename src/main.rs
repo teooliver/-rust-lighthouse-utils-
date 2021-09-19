@@ -66,14 +66,14 @@ fn main() {
     println!("{:?} ======>>>>>", avarage);
 }
 
-fn read_config_from_file<P: AsRef<Path>>(path: P) -> Result<Config, Box<Error>> {
+fn read_config_from_file<P: AsRef<Path>>(path: P) -> Result<Config, Box<dyn Error>> {
     // Open the file in read-only mode with buffer.
     let file = File::open(path)?;
     let reader = BufReader::new(file);
 
-    // Read the JSON contents of the file as an instance of `Cli`.
-    let u = serde_json::from_reader(reader)?;
+    // Read the JSON contents of the file as an instance of `Config`.
+    let config = serde_json::from_reader(reader)?;
 
-    // Return the `Cli`.
-    Ok(u)
+    // Return the `Config` struct.
+    Ok(config)
 }
