@@ -1,10 +1,10 @@
 #![feature(str_split_as_str)]
 
 use serde::{Deserialize, Serialize};
-use std::error::Error;
 use std::fs::File;
-use std::io::BufReader;
-use std::path::Path;
+
+mod utils;
+use utils::read_config_from_file;
 
 mod handle_reports_dir;
 use handle_reports_dir::{create_reports_dir, remove_reports_dir};
@@ -64,18 +64,7 @@ fn main() {
     JsonFiles::get_metrics_from_file(json_files[0].to_string()).unwrap();
     let avarage = JsonFiles::get_avarage_perfomance(json_files);
 
+    //use generate reports::write_avarage_to_json
     serde_json::to_writer_pretty(&File::create("./reports/report.json").unwrap(), &avarage)
         .unwrap();
-}
-
-fn read_config_from_file<P: AsRef<Path>>(path: P) -> Result<Config, Box<dyn Error>> {
-    // Open the file in read-only mode with buffer.
-    let file = File::open(path)?;
-    let reader = BufReader::new(file);
-
-    // Read the JSON contents of the file as an instance of `Config`.
-    let config = serde_json::from_reader(reader)?;
-
-    // Return the `Config` struct.
-    Ok(config)
 }
