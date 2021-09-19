@@ -22,4 +22,6 @@ Options:
 --url // site url
 --out-name // name to prefix the files
 --runs // number of test runs to calculate the avarage reports
+
+TODO:
 --verbose // give the results for all runs + the avarage
