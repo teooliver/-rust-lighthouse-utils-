@@ -6,6 +6,12 @@ It generates a json, html and csv reports.
 
 Documentation:
 
+You'll need to have `Node` and `lighthouse` installed in your computer:
+
+```sh
+  npm i -g lighthouse
+```
+
 Run:
 
 `rlu --config <path_to_config>`

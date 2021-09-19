@@ -37,39 +37,35 @@ fn main() {
     // println!("CREATING REPORTS DIR");
     create_reports_dir().expect("Couldn't create dir");
     let args = Cli::from_args();
+    let args_config = args.config;
+    let config: Config;
 
-    // if args.config {
-    let path_to_config = args.config.unwrap();
-    let json_config = read_config_from_file(path_to_config).unwrap();
-    // } else {
-    // let config = Config {
-    //     url: args.url.unwrap(),
-    //     dir: args.dir,
-    //     runs: args.runs,
-    //     out_file_name: args.out_file_name,
-    // };
-    // }
+    if let Some(args_config) = args_config {
+        let path_to_config = args_config;
+        config = read_config_from_file(path_to_config).unwrap();
+    } else {
+        // QUESTION: If I were using typescript, I would probably use the Partial type, since I need the
+        // same object as the `Cli` struct but without the `config` field;
+        config = Config {
+            url: args.url.unwrap(),
+            dir: args.dir,
+            runs: args.runs,
+            out_file_name: args.out_file_name,
+        };
+    }
 
-    println!("{:#?}", json_config)
+    println!("{:#?}", config);
 
-    // let cli_config = args.config;
-    // if let Some(cli_config) = cli_config {
-    //     // config = serde_json::from_str(cli_config).unwrap();
-    // } else {
-    //     config = args;
-    // }
-    // println!("{:?}", cli_config);
+    println!("Running tests...");
 
-    // println!("Running tests...");
+    run_lighthouse_test(config);
 
-    // run_lighthouse_test(config);
-
-    // println!("Cool, All done.");
-    // println!("READING FILES");
-    // let json_files = JsonFiles::get_json_files();
-    // JsonFiles::get_metrics_from_file(json_files[0].to_string()).unwrap();
-    // let avarage = JsonFiles::get_avarage_perfomance(json_files);
-    // println!("{:?} ======>>>>>", avarage);
+    println!("Cool, All done.");
+    println!("READING FILES");
+    let json_files = JsonFiles::get_json_files();
+    JsonFiles::get_metrics_from_file(json_files[0].to_string()).unwrap();
+    let avarage = JsonFiles::get_avarage_perfomance(json_files);
+    println!("{:?} ======>>>>>", avarage);
 }
 
 fn read_config_from_file<P: AsRef<Path>>(path: P) -> Result<Config, Box<Error>> {
