@@ -1,6 +1,6 @@
 use regex::Regex;
 use rustils::parse::short::usize_to_i16;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::error::Error;
 use std::fs::File;
@@ -18,7 +18,7 @@ pub struct MetricsObj {
   cumulative_layout_shift: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct AvaragesObj {
   perfomance: f32,
   first_contentful_paint: f32,

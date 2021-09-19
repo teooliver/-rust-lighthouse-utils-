@@ -63,7 +63,9 @@ fn main() {
     let json_files = JsonFiles::get_json_files();
     JsonFiles::get_metrics_from_file(json_files[0].to_string()).unwrap();
     let avarage = JsonFiles::get_avarage_perfomance(json_files);
-    println!("{:?} ======>>>>>", avarage);
+
+    serde_json::to_writer_pretty(&File::create("./reports/report.json").unwrap(), &avarage)
+        .unwrap();
 }
 
 fn read_config_from_file<P: AsRef<Path>>(path: P) -> Result<Config, Box<dyn Error>> {
