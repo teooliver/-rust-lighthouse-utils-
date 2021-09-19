@@ -54,8 +54,6 @@ fn main() {
         };
     }
 
-    println!("{:#?}", config);
-
     println!("Running tests...");
 
     run_lighthouse_test(config);

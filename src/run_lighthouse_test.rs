@@ -1,4 +1,3 @@
-use crate::Cli;
 use serde::{Deserialize, Serialize};
 use std::process::Command;
 
@@ -9,12 +8,6 @@ pub struct Config {
   pub runs: i32,
   pub out_file_name: String,
 }
-
-// #[derive(Serialize, Deserialize)]
-// struct WebsiteOptions {
-//   control_url: String,
-//   test_url: String,
-// }
 
 pub fn run_lighthouse_test(config: Config) {
   let mut runs = 0;

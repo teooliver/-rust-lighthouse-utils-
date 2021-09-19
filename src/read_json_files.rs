@@ -7,15 +7,6 @@ use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
 
-// const LIGHTHOUSE_PERFOMANCE_METRICS: [&'static str; 6] = [
-//   "first-contentful-paint",
-//   "speed-index",
-//   "largest-contentful-paint",
-//   "interactive",
-//   "total-blocking-time",
-//   "cumulative-layout-shift",
-// ];
-
 #[derive(Deserialize, Debug)]
 pub struct MetricsObj {
   perfomance: String,
@@ -43,7 +34,6 @@ pub struct JsonFiles {}
 impl JsonFiles {
   pub fn get_json_files() -> Vec<String> {
     let re = Regex::new(r".*\.json").unwrap();
-    // assert!(re.is_match("2014-01-01"));
 
     let mut json_files: Vec<String> = vec![];
     let path = Path::new("./reports");
@@ -127,7 +117,6 @@ impl JsonFiles {
 
     for path in paths {
       let metrics = JsonFiles::get_metrics_from_file(path).unwrap();
-      // println!("{:?} ======", metrics);
 
       // QUESTION: Coundln't find a good way of iterating trhough the a Struct,
       // maybe this should be a Struct from the start? Or maybe I should implement my own
