@@ -7,19 +7,8 @@ use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
 
-#[derive(Deserialize, Debug)]
-pub struct MetricsObj {
-  perfomance: String,
-  first_contentful_paint: String,
-  speed_index: String,
-  largest_contentful_paint: String,
-  interactive: String,
-  total_blocking_time: String,
-  cumulative_layout_shift: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct AvaragesObj {
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Metrics {
   perfomance: f32,
   first_contentful_paint: f32,
   speed_index: f32,
@@ -27,6 +16,13 @@ pub struct AvaragesObj {
   interactive: f32,
   total_blocking_time: f32,
   cumulative_layout_shift: f32,
+}
+
+// QUESTION: AvaragesObj and TestRuns are quite similar, is there a better way of using them?
+#[derive(Serialize, Deserialize, Debug)]
+pub struct RunsResult {
+  runs: Vec<Metrics>,
+  avarage: Metrics,
 }
 
 pub struct JsonFiles {}
@@ -56,11 +52,11 @@ impl JsonFiles {
     json_files
   }
 
-  pub fn get_metrics_from_file(path: String) -> Result<MetricsObj, Box<dyn Error>> {
+  pub fn get_metrics_from_file(path: String) -> Result<Metrics, Box<dyn Error>> {
     // open the file in read-only mode with buffer.
     let file = File::open(path)?;
     let reader = BufReader::new(file);
-    // read the json contents of the file as an instance of `metricsobj`.
+    // read the json contents of the file as an instance of `Value`.
     let metrics: Value = serde_json::from_reader(reader)?;
 
     let perfomance = &metrics["categories"]["performance"]["score"];
@@ -89,21 +85,21 @@ impl JsonFiles {
     let clc_string = cls.as_str().unwrap();
     let cls_clean = clc_string.trim();
 
-    let metrics_obj = MetricsObj {
-      perfomance: Value::to_string(perfomance),
-      first_contentful_paint: fcp_clean[0].trim().to_string(),
-      speed_index: si_clean[0].trim().to_string(),
-      largest_contentful_paint: lcp_clean[0].trim().to_string(),
-      interactive: interactive_clean[0].trim().to_string(),
-      total_blocking_time: tbt_clean[0].trim().to_string(),
-      cumulative_layout_shift: cls_clean.to_string(),
+    let metrics_obj = Metrics {
+      perfomance: Value::to_string(perfomance).parse::<f32>().unwrap(),
+      first_contentful_paint: fcp_clean[0].trim().parse::<f32>().unwrap(),
+      speed_index: si_clean[0].trim().parse::<f32>().unwrap(),
+      largest_contentful_paint: lcp_clean[0].trim().parse::<f32>().unwrap(),
+      interactive: interactive_clean[0].trim().parse::<f32>().unwrap(),
+      total_blocking_time: tbt_clean[0].trim().parse::<f32>().unwrap(),
+      cumulative_layout_shift: cls_clean.parse::<f32>().unwrap(),
     };
 
     Ok(metrics_obj)
   }
 
-  pub fn get_avarage_perfomance(paths: Vec<String>) -> AvaragesObj {
-    let mut avarage_obj = AvaragesObj {
+  pub fn get_avarage_perfomance(paths: Vec<String>) -> RunsResult {
+    let mut avarage_obj = Metrics {
       perfomance: 0.0,
       first_contentful_paint: 0.0,
       speed_index: 0.0,
@@ -115,9 +111,14 @@ impl JsonFiles {
 
     let runs = usize_to_i16(paths.len()) as f32;
 
+    let mut run_results = RunsResult {
+      runs: Vec::new(),
+      avarage: avarage_obj.clone(),
+    };
+
     for path in paths {
       let metrics = JsonFiles::get_metrics_from_file(path).unwrap();
-
+      run_results.runs.push(metrics.clone());
       // QUESTION: Coundln't find a good way of iterating trhough the a Struct,
       // maybe this should be a Struct from the start? Or maybe I should implement my own
       // iterator for this struct?
@@ -125,25 +126,23 @@ impl JsonFiles {
       //   println!("{:?} ======>>>>>", metric);
       // }
 
-      avarage_obj.perfomance = avarage_obj.perfomance + metrics.perfomance.parse::<f32>().unwrap();
+      avarage_obj.perfomance = avarage_obj.perfomance + metrics.perfomance;
 
       avarage_obj.first_contentful_paint =
-        avarage_obj.first_contentful_paint + metrics.first_contentful_paint.parse::<f32>().unwrap();
+        avarage_obj.first_contentful_paint + metrics.first_contentful_paint;
 
-      avarage_obj.speed_index =
-        avarage_obj.speed_index + metrics.speed_index.parse::<f32>().unwrap();
+      avarage_obj.speed_index = avarage_obj.speed_index + metrics.speed_index;
 
-      avarage_obj.largest_contentful_paint = avarage_obj.largest_contentful_paint
-        + metrics.largest_contentful_paint.parse::<f32>().unwrap();
+      avarage_obj.largest_contentful_paint =
+        avarage_obj.largest_contentful_paint + metrics.largest_contentful_paint;
 
-      avarage_obj.interactive =
-        avarage_obj.interactive + metrics.interactive.parse::<f32>().unwrap();
+      avarage_obj.interactive = avarage_obj.interactive + metrics.interactive;
 
       avarage_obj.total_blocking_time =
-        avarage_obj.total_blocking_time + metrics.total_blocking_time.parse::<f32>().unwrap();
+        avarage_obj.total_blocking_time + metrics.total_blocking_time;
 
-      avarage_obj.cumulative_layout_shift = avarage_obj.cumulative_layout_shift
-        + metrics.cumulative_layout_shift.parse::<f32>().unwrap();
+      avarage_obj.cumulative_layout_shift =
+        avarage_obj.cumulative_layout_shift + metrics.cumulative_layout_shift;
     }
 
     avarage_obj.perfomance = avarage_obj.perfomance / runs;
@@ -160,6 +159,8 @@ impl JsonFiles {
 
     avarage_obj.cumulative_layout_shift = avarage_obj.cumulative_layout_shift / runs;
 
-    avarage_obj
+    run_results.avarage = avarage_obj.clone();
+
+    run_results
   }
 }
