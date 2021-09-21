@@ -4,10 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::fs::File;
 
 mod utils;
-use utils::read_config_from_file;
-
-mod handle_reports_dir;
-use handle_reports_dir::{create_reports_dir, remove_reports_dir};
+use utils::{create_reports_dir, read_config_from_file, remove_reports_dir};
 
 mod read_json_files;
 use read_json_files::*;
