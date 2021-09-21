@@ -18,7 +18,6 @@ pub struct Metrics {
   cumulative_layout_shift: f32,
 }
 
-// QUESTION: AvaragesObj and TestRuns are quite similar, is there a better way of using them?
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RunsResult {
   runs: Vec<Metrics>,
@@ -119,7 +118,7 @@ impl JsonFiles {
     for path in paths {
       let metrics = JsonFiles::get_metrics_from_file(path).unwrap();
       run_results.runs.push(metrics.clone());
-      // QUESTION: Coundln't find a good way of iterating trhough the a Struct,
+      // QUESTION: Coundln't find a good way of iterating trought the a Struct,
       // maybe this should be a Struct from the start? Or maybe I should implement my own
       // iterator for this struct?
       // i.e. for metric in metrics {
@@ -145,19 +144,19 @@ impl JsonFiles {
         avarage_obj.cumulative_layout_shift + metrics.cumulative_layout_shift;
     }
 
-    avarage_obj.perfomance = avarage_obj.perfomance / runs;
+    avarage_obj.perfomance /= runs;
 
-    avarage_obj.first_contentful_paint = avarage_obj.first_contentful_paint / runs;
+    avarage_obj.first_contentful_paint /= runs;
 
-    avarage_obj.speed_index = avarage_obj.speed_index / runs;
+    avarage_obj.speed_index /= runs;
 
-    avarage_obj.largest_contentful_paint = avarage_obj.largest_contentful_paint / runs;
+    avarage_obj.largest_contentful_paint /= runs;
 
-    avarage_obj.interactive = avarage_obj.interactive / runs;
+    avarage_obj.interactive /= runs;
 
-    avarage_obj.total_blocking_time = avarage_obj.total_blocking_time / runs;
+    avarage_obj.total_blocking_time /= runs;
 
-    avarage_obj.cumulative_layout_shift = avarage_obj.cumulative_layout_shift / runs;
+    avarage_obj.cumulative_layout_shift /= runs;
 
     run_results.avarage = avarage_obj.clone();
 

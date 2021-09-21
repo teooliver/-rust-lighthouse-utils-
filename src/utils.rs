@@ -4,7 +4,8 @@ use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
 
-use crate::run_lighthouse_test::Config;
+use crate::read_json_files::RunsResult;
+use crate::run_lighthouse_tests::Config;
 
 pub fn read_config_from_file<P: AsRef<Path>>(path: P) -> Result<Config, Box<dyn Error>> {
   // Open the file in read-only mode with buffer.
@@ -28,4 +29,8 @@ pub fn remove_reports_dir() -> std::io::Result<()> {
     fs::remove_dir_all("./reports")?;
   }
   Ok(())
+}
+
+pub fn write_results_to_json(avarage: RunsResult) {
+  serde_json::to_writer_pretty(&File::create("./reports/report.json").unwrap(), &avarage).unwrap();
 }

@@ -1,16 +1,15 @@
 #![feature(str_split_as_str)]
 
 use serde::{Deserialize, Serialize};
-use std::fs::File;
 
 mod utils;
-use utils::{create_reports_dir, read_config_from_file, remove_reports_dir};
+use utils::{create_reports_dir, read_config_from_file, remove_reports_dir, write_results_to_json};
 
 mod read_json_files;
 use read_json_files::*;
 
-mod run_lighthouse_test;
-use run_lighthouse_test::{run_lighthouse_test, Config};
+mod run_lighthouse_tests;
+use run_lighthouse_tests::{run_lighthouse_tests, Config};
 
 use structopt::StructOpt;
 
@@ -53,7 +52,7 @@ fn main() {
 
     println!("Running tests...");
 
-    run_lighthouse_test(config);
+    run_lighthouse_tests(config);
 
     println!("Cool, All done.");
     println!("READING FILES");
@@ -61,7 +60,5 @@ fn main() {
     JsonFiles::get_metrics_from_file(json_files[0].to_string()).unwrap();
     let avarage = JsonFiles::get_avarage_perfomance(json_files);
 
-    //use generate reports::write_avarage_to_json
-    serde_json::to_writer_pretty(&File::create("./reports/report.json").unwrap(), &avarage)
-        .unwrap();
+    write_results_to_json(avarage);
 }

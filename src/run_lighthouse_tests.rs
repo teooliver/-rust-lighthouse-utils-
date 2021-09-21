@@ -9,7 +9,7 @@ pub struct Config {
   pub out_file_name: String,
 }
 
-pub fn run_lighthouse_test(config: Config) {
+pub fn run_lighthouse_tests(config: Config) {
   let mut runs = 0;
   while runs < config.runs {
     let mut control_output = Command::new("lighthouse");
