@@ -16,6 +16,8 @@ Run:
 
 `rlu --config <path_to_config>`
 
+`./rust-lighthouse-utils --test-url=<url> --runs 2`
+
 Options:
 
 --config // path to config file
