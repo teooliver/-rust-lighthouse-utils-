@@ -28,9 +28,7 @@ pub struct Cli {
 }
 
 fn main() {
-    // println!("REMOVING REPORTS DIR");
     remove_reports_dir().expect("Couldn't remove dir");
-    // println!("CREATING REPORTS DIR");
     create_reports_dir().expect("Couldn't create dir");
     let args = Cli::from_args();
     let args_config = args.config;
@@ -40,8 +38,6 @@ fn main() {
         let path_to_config = args_config;
         config = read_config_from_file(path_to_config).unwrap();
     } else {
-        // QUESTION: If I were using typescript, I would probably use the Partial type, since I need the
-        // same object as the `Cli` struct but without the `config` field;
         config = Config {
             url: args.url.unwrap(),
             dir: args.dir,
@@ -54,11 +50,10 @@ fn main() {
 
     run_lighthouse_tests(config);
 
-    println!("Cool, All done.");
-    println!("READING FILES");
     let json_files = JsonFiles::get_json_files();
-    JsonFiles::get_metrics_from_file(json_files[0].to_string()).unwrap();
     let avarage = JsonFiles::get_avarage_perfomance(json_files);
 
     write_results_to_json(avarage);
+
+    println!("Cool, All done.");
 }
