@@ -1,7 +1,6 @@
 #![feature(str_split_as_str)]
 
-#[macro_use]
-extern crate colour;
+use colour::green_ln;
 use serde::{Deserialize, Serialize};
 mod utils;
 use utils::{create_reports_dir, read_config_from_file, remove_reports_dir, write_results_to_json};
