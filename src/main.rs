@@ -1,7 +1,8 @@
 #![feature(str_split_as_str)]
 
+#[macro_use]
+extern crate colour;
 use serde::{Deserialize, Serialize};
-
 mod utils;
 use utils::{create_reports_dir, read_config_from_file, remove_reports_dir, write_results_to_json};
 
@@ -46,7 +47,7 @@ fn main() {
         };
     }
 
-    println!("Running tests...");
+    green_ln!("Running tests...");
 
     run_lighthouse_tests(config);
 
@@ -55,5 +56,5 @@ fn main() {
 
     write_results_to_json(avarage);
 
-    println!("Cool, All done.");
+    green_ln!("Cool, All done.");
 }

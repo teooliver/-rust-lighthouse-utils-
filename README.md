@@ -4,7 +4,7 @@ A CLI tool for running multiple lighthouse tests on a website and generating an 
 
 It generates a json, html and csv reports.
 
-Documentation:
+## Documentation:
 
 You'll need to have `Node` and `lighthouse` installed in your computer:
 
@@ -14,9 +14,11 @@ You'll need to have `Node` and `lighthouse` installed in your computer:
 
 Run:
 
+`cargo run -- --config <path_to_config>`
+
 `rlu --config <path_to_config>`
 
-`./rust-lighthouse-utils --test-url=<url> --runs 2`
+`rlu --test-url=<url> --runs 5`
 
 Options:
 
@@ -27,3 +29,6 @@ Options:
 
 TODO:
 --verbose // give the results for all runs + the avarage
+
+- Better error handling all around
+- Fix bug where trying to parse strings like "223,43" to i32.
